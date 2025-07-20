@@ -20,10 +20,12 @@ public class userDaoService {
 	
 	//lets create a static list of users
 	public static List<User> users=new ArrayList<>();
+	
+	static int count =0;
 	static {
-		users.add(new User(1, "Madhavan",LocalDate.now().minusYears(30)));
-		users.add(new User(2, "Vijay",LocalDate.now().minusYears(20)));
-		users.add(new User(3, "Surya",LocalDate.now().minusYears(32)));
+		users.add(new User(++count, "Madhavan",LocalDate.now().minusYears(30)));
+		users.add(new User(++count, "Vijay",LocalDate.now().minusYears(20)));
+		users.add(new User(++count, "Surya",LocalDate.now().minusYears(32)));
 	}
 	
 	public List<User> findAll(){
@@ -32,8 +34,20 @@ public class userDaoService {
 	}
 	public User findOne(int id) {
 		Predicate<? super User> predicate = user -> user.getId().equals(id);
-		return users.stream().filter(predicate).findFirst().get();
+		User user = users.stream().filter(predicate).findFirst().orElse(null);
+		return user;
 		
+	}
+	
+	public void DeleteById(int id) {
+		Predicate<? super User> predicate = user -> user.getId().equals(id);
+		users.removeIf(predicate);
+	}
+	
+	public User save(User user) {
+		user.setId(++count);
+		users.add(user);
+		return user;
 	}
 	
 }
